@@ -137,6 +137,8 @@ create view v_tutores as
         it.carrera as id_carrera,
         ca.nombre as carrera,
         it.grado as id_grado,
+        it.banco as banco,
+        it.cuenta as cuenta,
         g.nombre as ciclo,
         it.horas_max as hmx,
         it.fecha_vencimiento as vencimiento,
