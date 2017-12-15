@@ -239,9 +239,9 @@ select
     ANY_VALUE(f.apellido) as familia,
     FORMAT(sum(
         CASE when c.pluralidad = 1 THEN 
-            c.bloques * t.valor_clase_individual * c.modificador
+            (c.bloques * t.valor_clase_individual * c.modificador)
         ELSE
-            c.bloques * t.valor_clase_grupal * c.modificador
+            (c.bloques * t.valor_clase_grupal * c.modificador)
         END)/2,1) as monto_mes,
     ANY_VALUE(t.moneda_tarifa) as moneda,
     month(c.fecha_creacion) as mes,
@@ -288,12 +288,64 @@ select
     ELSE
         0
     END)/2,1) as horas_grupales,
-    month(p.fecha_creacion) as mes
+    month(p.fecha_creacion) as mes,
+    year(p.fecha_creacion) as year
 from pagos as p
 inner join tutores as tu on p.tutor = tu.id_tutor
 inner join internal_tutores as it on p.tutor = it.id
 where p.estado = 'PENDIENTE'
-group by p.tutor, MONTH(p.fecha_creacion);
+group by p.tutor, MONTH(p.fecha_creacion),YEAR(p.fecha_creacion);
+
+create view v_detalle_pagos as
+select
+	p.id as id,
+	p.tutor as tutor,
+	pl.detalle as pluralidad,
+	month(p.fecha_creacion) as mes,
+	year(p.fecha_creacion) as year,
+	c.fecha as fecha_clase,
+	c.hora_inicio_planeada as hora_inicio_planeada,
+	c.hora_inicio_real as hora_inicio_real,
+	c.hora_final_planeada as hora_final_planeada,
+	c.hora_final_real as hora_final_real,
+    c.estado as estado_clase,
+	cu.nombre as curso
+from pagos as p
+inner join clases as c 
+	on p.clase = c.id
+inner join pluralidades as pl on p.pluralidad = pl.id
+inner join cursos as cu on c.curso = cu.id
+where p.estado = 'PENDIENTE';
+
+create view v_detalles_cobranzas as
+select
+	c.familia as familia,
+	f.apellido as apellido,
+	pl.detalle as pluralidad,
+	month(c.fecha_creacion) as mes,
+	year(c.fecha_creacion) as year,
+	tu.tutor as tutor,
+	cl.hora_inicio_planeada as hora_inicio_planeada,
+	cl.hora_inicio_real as hora_inicio_real,
+	cl.hora_final_planeada as hora_final_planeada,
+	cl.hora_final_real as hora_final_real,
+	cl.estado as estado_clase,
+	cu.nombre as curso,
+	FORMAT(CASE when c.pluralidad = 1 THEN (c.modificador * c.bloques * t.valor_clase_individual)/2 ELSE (c.modificador * c.bloques * t.valor_clase_grupal)/2 END,1) as monto,
+	t.moneda_tarifa as moneda
+from cobranzas as c
+inner join pluralidades as pl
+	on c.pluralidad = pl.id
+inner join clases as cl 
+	on c.clase = cl.id
+inner join familias as f
+	on f.id = c.familia
+inner join tarifas as t
+	on f.tarifas = t.id
+inner join cursos as cu on cl.curso = cu.id
+inner join tutores as tu
+	on cl.tutor = tu.id_tutor
+where c.estado = 'PENDIENTE';
 
 create view v_calendario_rut_dias as
     select
