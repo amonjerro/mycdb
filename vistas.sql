@@ -325,6 +325,7 @@ select
 	month(c.fecha_creacion) as mes,
 	year(c.fecha_creacion) as year,
 	tu.tutor as tutor,
+	cl.fecha as fecha,
 	cl.hora_inicio_planeada as hora_inicio_planeada,
 	cl.hora_inicio_real as hora_inicio_real,
 	cl.hora_final_planeada as hora_final_planeada,
