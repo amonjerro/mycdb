@@ -24,25 +24,14 @@ create view v_rut_dias as
     inner join rutinas as rt on ru.rutina = rt.id
     inner join cursos as cu on ru.curso = cu.id;
 
-create view v_familia as 
-select 
-    a.id as id_alumno,
-    concat(a.nombre,' ', a.apellido) as alumno,
-    a.estado as e_alumno,
-    p.id as id_padre,
-    concat(p.nombre,' ',p.apellidos) as padre,
-    p.nombre as nombre_padre,
-    p.mail as mail_padre,
-    p.estado as e_padre,
-    f.id as id_familia,
-    f.apellido as familia,
-    f.tarifas as id_tarifa,
-    t.nombre as tarifa,
-    f.estado as estado
-from familias as f 
-left join alumnos as a on f.id = a.familia
-left join padres as p on f.id = p.familia
-inner join tarifas as t on f.tarifas = t.id; 
+create view v_familia as
+	select 
+	f.id as id,
+	f.apellido as apellido,
+	t.nombre as tarifas,
+	f.estado as estado
+	from familias as f
+	inner join tarifas as t  on f.tarifas = t.id;
 
 
 create view v_rutinas as 
