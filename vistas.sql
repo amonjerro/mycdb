@@ -374,5 +374,5 @@ create view v_detalles_clase as
     inner join tipos_clase as ti on c.tipo = ti.id
     inner join pluralidades as plr on c.pluralidad = plr.id
     inner join cursos as cu on cu.id = c.curso
-    where ca.estado = 'ACTIVO'
+    where ca.estado != 'INACTIVO'
     order by fecha, hora_inicio_planeada, clase_id;
