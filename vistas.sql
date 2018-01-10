@@ -1,13 +1,14 @@
 -- Vistas
 
 create view v_ccee_nivel as
-    select 
-        c.id as id,
-        c.nombre as nombre,
-        nce.nivel as nivel
-    from nivel_centro_educativos as nce
-    inner join centros_educativos as c on c.id = nce.ccee
-    inner join niveles as n on n.id = nce.nivel;
+select 
+    c.id as id,
+    c.nombre as nombre,
+    nce.nivel as nivel,
+    n.descripcion as nivel_nombre
+from nivel_centro_educativos as nce
+inner join centros_educativos as c on c.id = nce.ccee
+inner join niveles as n on n.id = nce.nivel;
 
 create view v_rut_dias as
     select ru.rutina as rutina, 
