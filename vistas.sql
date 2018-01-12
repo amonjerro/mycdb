@@ -2,12 +2,16 @@
 
 create view v_reporte_horas_tutor as
 select 
-	FORMAT(sum(p.bloques)/2,2) as horas_atendidas,
-	MONTH(p.fecha_creacion) as mes,
-	YEAR(p.fecha_creacion) as year,
 	p.tutor,
 	concat(a.nombre,' ',a.apellido) as alumno,
-	pl.detalle as pluralidad
+	pl.detalle as pluralidad,
+	c.fecha,
+	c.hora_inicio_planeada,
+	c.hora_inicio_real,
+	c.hora_final_planeada,
+	c.hora_final_real,
+	cu.nombre as curso,
+	c.estado as estado
 from pagos as p
 inner join clases as c 
 	on p.clase = c.id
@@ -15,9 +19,10 @@ inner join pluralidades as pl
 	on c.pluralidad = pl.id
 inner join clases_alumnos as ca 
 	on ca.clase = c.id
+inner join cursos as cu
+	on cu.id = c.curso
 inner join alumnos as a
-	on ca.alumno = a.id
-group by tutor, year, mes, alumno, pluralidad;
+	on ca.alumno = a.id;
 
 create view v_ccee_nivel as
 select 
