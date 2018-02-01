@@ -410,4 +410,4 @@ select
 	c.nombre_constante as categoria,
 	c.valor_3 as valor
 from tutores_categoria as tc
-inner join constantes as c on c.id = tc.id;
+inner join constantes as c on c.id = tc.categoria;
