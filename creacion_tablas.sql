@@ -302,4 +302,14 @@ create table constantes (
     valor_2 int,
     valor_3 int
 );
+
+create table tutores_categoria (
+	id int primary key auto_increment,
+	tutor int,
+	mes int,
+	annum int,
+	categoria int,
+	foreign key (tutor) references tutores(id_tutor),
+	foreign key (categoria) references constantes(id)
+);
 --Testeado 19/9/2017
