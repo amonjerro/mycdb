@@ -401,3 +401,13 @@ create view v_detalles_clase as
     inner join cursos as cu on cu.id = c.curso
     where ca.estado != 'INACTIVO'
     order by fecha, hora_inicio_planeada, clase_id;
+
+create view v_pagoPorCategoria as
+select 
+	tc.tutor as tutor,
+	tc.mes as mes,
+	tc.annum as annum,
+	c.nombre_constante as categoria,
+	c.valor_3 as valor
+from tutores_categoria as tc
+inner join constantes as c on c.id = tc.id;
