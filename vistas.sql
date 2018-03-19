@@ -113,6 +113,7 @@ select
 create view v_users as
     select
         usr.username as uname,
+        usr.grupo as grupo_id,
         grp.nombre as grupo,
         usr.ultimo_login as login,
         usr.estado as estado,
