@@ -264,10 +264,13 @@ select
         END)/2,1) as monto_mes,
     ANY_VALUE(t.moneda_tarifa) as moneda,
     month(c.fecha_creacion) as mes,
+    ANY_VALUE(it.supervisor) as supervisor,
     ANY_VALUE(year(c.fecha_creacion)) as annum
 from cobranzas as c
 inner join familias as f  on c.familia = f.id
 inner join tarifas as t on f.tarifas = t.id
+inner join clases as cl on c.clase = cl.id
+inner join internal_tutores as it on cl.tutor = it.id
 where c.estado = 'PENDIENTE'
 group by c.familia, MONTH(c.fecha_creacion);
 
@@ -308,6 +311,7 @@ select
         0
     END)/2,1) as horas_grupales,
     month(p.fecha_creacion) as mes,
+    it.supervisor as supervisor,
     year(p.fecha_creacion) as year
 from pagos as p
 inner join tutores as tu on p.tutor = tu.id_tutor
