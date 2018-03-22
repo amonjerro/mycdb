@@ -105,10 +105,13 @@ select
     e.creacion as fecha_evento,
     e.causante as causante,
     e.estado as estado_evento,
+    it.supervisor as supervisor,
     e.comentario as comentario
     from eventos as e
     inner join tipos_eventos as te on e.tipo_evento = te.id
-    inner join alumnos as a on e.destinatario = a.id;
+    inner join alumnos as a on e.destinatario = a.id
+    inner join clases as c on c.id = e.clase
+    left join internal_tutores as it on it.id = c.tutor;
 
 create view v_users as
     select
@@ -324,13 +327,15 @@ select
 	c.hora_inicio_real as hora_inicio_real,
 	c.hora_final_planeada as hora_final_planeada,
 	c.hora_final_real as hora_final_real,
-    c.estado as estado_clase,
+    	c.estado as estado_clase,
+	it.supervisor as supervisor,
 	cu.nombre as curso
 from pagos as p
 inner join clases as c 
 	on p.clase = c.id
 inner join pluralidades as pl on p.pluralidad = pl.id
 inner join cursos as cu on c.curso = cu.id
+left join internal_tutores as it on c.tutor = it.id
 where p.estado = 'PENDIENTE';
 
 create view v_detalles_cobranzas as
@@ -341,6 +346,7 @@ select
 	month(c.fecha_creacion) as mes,
 	year(c.fecha_creacion) as year,
 	tu.tutor as tutor,
+	it.supervisor as supervisor,
 	cl.fecha as fecha,
 	cl.hora_inicio_planeada as hora_inicio_planeada,
 	cl.hora_inicio_real as hora_inicio_real,
@@ -362,6 +368,8 @@ inner join tarifas as t
 inner join cursos as cu on cl.curso = cu.id
 inner join tutores as tu
 	on cl.tutor = tu.id_tutor
+left join internal_tutores as it
+	on it.id = tu.id_tutor
 where c.estado = 'PENDIENTE';
 
 create view v_calendario_rut_dias as
