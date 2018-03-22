@@ -344,36 +344,36 @@ where p.estado = 'PENDIENTE';
 
 create view v_detalles_cobranzas as
 select
-	c.familia as familia,
-	f.apellido as apellido,
-	pl.detalle as pluralidad,
-	month(c.fecha_creacion) as mes,
-	year(c.fecha_creacion) as year,
-	tu.tutor as tutor,
-	it.supervisor as supervisor,
-	cl.fecha as fecha,
-	cl.hora_inicio_planeada as hora_inicio_planeada,
-	cl.hora_inicio_real as hora_inicio_real,
-	cl.hora_final_planeada as hora_final_planeada,
-	cl.hora_final_real as hora_final_real,
-	cl.estado as estado_clase,
-	cu.nombre as curso,
-	FORMAT(CASE when c.pluralidad = 1 THEN (c.modificador * c.bloques * t.valor_clase_individual)/2 ELSE (c.modificador * c.bloques * t.valor_clase_grupal)/2 END,1) as monto,
-	t.moneda_tarifa as moneda
+    c.familia as familia,
+    f.apellido as apellido,
+    pl.detalle as pluralidad,
+    month(c.fecha_creacion) as mes,
+    year(c.fecha_creacion) as year,
+    tu.tutor as tutor,
+    it.supervisor as supervisor,
+    cl.fecha as fecha,
+    cl.hora_inicio_planeada as hora_inicio_planeada,
+    cl.hora_inicio_real as hora_inicio_real,
+    cl.hora_final_planeada as hora_final_planeada,
+    cl.hora_final_real as hora_final_real,
+    cl.estado as estado_clase,
+    cu.nombre as curso,
+    FORMAT(CASE when c.pluralidad = 1 or c.pluralidad = 3 THEN (c.modificador * c.bloques * t.valor_clase_individual)/2 ELSE (c.modificador * c.bloques * t.valor_clase_grupal)/2 END,1) as monto,
+    t.moneda_tarifa as moneda
 from cobranzas as c
 inner join pluralidades as pl
-	on c.pluralidad = pl.id
+    on c.pluralidad = pl.id
 inner join clases as cl 
-	on c.clase = cl.id
+    on c.clase = cl.id
 inner join familias as f
-	on f.id = c.familia
+    on f.id = c.familia
 inner join tarifas as t
-	on f.tarifas = t.id
+    on f.tarifas = t.id
 inner join cursos as cu on cl.curso = cu.id
 inner join tutores as tu
-	on cl.tutor = tu.id_tutor
+    on cl.tutor = tu.id_tutor
 left join internal_tutores as it
-	on it.id = tu.id_tutor
+    on it.id = tu.id_tutor
 where c.estado = 'PENDIENTE';
 
 create view v_calendario_rut_dias as
