@@ -117,10 +117,12 @@ create view v_users as
         grp.nombre as grupo,
         usr.ultimo_login as login,
         usr.estado as estado,
-        if (usr.nombre is null, tut.tutor, concat(usr.nombre,' ',usr.apellido)) as nombre
+        if (usr.nombre is null, tut.tutor, concat(usr.nombre,' ',usr.apellido)) as nombre,
+        it.supervisor as supervisor
     from intranet_usuarios as usr
     inner join grupos as grp on usr.grupo = grp.id
-    left join tutores as tut on usr.tutor = tut.id_tutor;
+    left join tutores as tut on usr.tutor = tut.id_tutor
+    left join internal_tutores as it on tut.id_tutor = it.id;
 
 create view v_tutores_cursos as
     select
