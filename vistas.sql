@@ -192,6 +192,7 @@ select
     it.fecha_vencimiento as fecha_vencimiento,
     it.ultima_renovacion as ultima_renovacion,
     it.estado as estado,
+    it.supervisor as supervisor,
     cla.horas_max as horas_ocupadas,
     floor((cla.horas_max / it.horas_max)*100) as ocupacion
 from internal_tutores as it
