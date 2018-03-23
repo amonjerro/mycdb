@@ -24,6 +24,31 @@ inner join cursos as cu
 inner join alumnos as a
 	on ca.alumno = a.id;
 
+create view v_detalles_cobranzas_reporte as
+select
+    c.familia as familia,
+    pl.detalle as pluralidad,
+    tu.tutor as tutor,
+    cl.fecha as fecha,
+    cl.hora_inicio_planeada as hora_inicio_planeada,
+    cl.hora_final_planeada as hora_final_planeada,
+    cl.estado as estado_clase,
+    cu.nombre as curso,
+    FORMAT(CASE when c.pluralidad = 1 or c.pluralidad = 3 THEN (c.modificador * c.bloques * t.valor_clase_individual)/2 ELSE (c.modificador * c.bloques * t.valor_clase_grupal)/2 END,1) as monto,
+    t.moneda_tarifa as moneda
+from cobranzas as c
+inner join pluralidades as pl
+    on c.pluralidad = pl.id
+inner join clases as cl 
+    on c.clase = cl.id
+inner join familias as f
+    on f.id = c.familia
+inner join tarifas as t
+    on f.tarifas = t.id
+inner join cursos as cu on cl.curso = cu.id
+inner join tutores as tu
+    on cl.tutor = tu.id_tutor;
+
 create view v_ccee_nivel as
 select 
     c.id as id,
