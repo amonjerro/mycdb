@@ -310,6 +310,12 @@ select
     ELSE
         0
     END)/2,1) as horas_grupales,
+    FORMAT(sum(
+    CASE when p.pluralidad = 3 THEN 
+        p.bloques
+    ELSE
+        0
+    END)/2,1) as horas_psicologia,
     month(p.fecha_creacion) as mes,
     it.supervisor as supervisor,
     year(p.fecha_creacion) as year
