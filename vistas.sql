@@ -282,7 +282,7 @@ select
     ANY_VALUE(f.id) as id_familia,
     ANY_VALUE(f.apellido) as familia,
     FORMAT(sum(
-        CASE when c.pluralidad = 1 THEN 
+        CASE when c.pluralidad = 1 OR c.pluralidad = 3 THEN 
             (c.bloques * t.valor_clase_individual * c.modificador)
         ELSE
             (c.bloques * t.valor_clase_grupal * c.modificador)
